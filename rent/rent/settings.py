@@ -12,6 +12,10 @@ BOT_NAME = 'rent'
 SPIDER_MODULES = ['rent.spiders']
 NEWSPIDER_MODULE = 'rent.spiders'
 
+MONGO_URI = '182.92.223.235:27017'
+MONGO_DB = 'rent'
+MONGO_USER = 'admin'
+MONGO_PW = 'xtt576566'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'rent (+http://www.yourdomain.com)'
@@ -52,9 +56,10 @@ SPIDER_MIDDLEWARES = {
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
+DOWNLOADER_MIDDLEWARES = {
 #    'rent.middlewares.RentDownloaderMiddleware': 543,
-#}
+    'rent.middlewares.ProxyMiddleWare': 700,
+}
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
@@ -64,9 +69,10 @@ SPIDER_MIDDLEWARES = {
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'rent.pipelines.RentPipeline': 300,
-#}
+ITEM_PIPELINES = {
+   'rent.pipelines.RentPipeline': 300,
+   'rent.pipelines.MongoPipeline': 400,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html

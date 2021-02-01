@@ -5,7 +5,37 @@ import re
 class RentSpider(scrapy.Spider):
     name = 'rent'
     allowed_domains=['bj.lianjia.com']
-    start_urls = ['https://bj.lianjia.com/zufang/dongcheng/pg1']
+    start_urls = [
+        'https://bj.lianjia.com/zufang/dongcheng/pg1rco11/',
+        'https://bj.lianjia.com/zufang/xicheng/pg1rco11/',
+        'https://bj.lianjia.com/zufang/chaoyang/pg1rco11rp1rp2rp3rp4/',
+        'https://bj.lianjia.com/zufang/chaoyang/pg1rco11l0rp5/',
+        'https://bj.lianjia.com/zufang/chaoyang/pg1rco11l1rp5/',
+        'https://bj.lianjia.com/zufang/chaoyang/pg1rco11l2l3rp5/',
+        'https://bj.lianjia.com/zufang/chaoyang/pg1rco11l0l1rp6/',
+        'https://bj.lianjia.com/zufang/chaoyang/pg1rco11l2l3rp6/',
+        'https://bj.lianjia.com/zufang/haidian/pg1rco11l0/',
+        'https://bj.lianjia.com/zufang/haidian/pg1rco11l1/',
+        'https://bj.lianjia.com/zufang/haidian/pg1rco11l2l3/',
+        'https://bj.lianjia.com/zufang/fengtai/pg1rco11l0/',
+        'https://bj.lianjia.com/zufang/fengtai/pg1rco11l1/',
+        'https://bj.lianjia.com/zufang/fengtai/pg1rco11l2l3/',
+        'https://bj.lianjia.com/zufang/shijingshan/pg1rco11/',
+        'https://bj.lianjia.com/zufang/tongzhou/pg1rco11l0l1/',
+        'https://bj.lianjia.com/zufang/tongzhou/pg1rco11l2l3/',
+        'https://bj.lianjia.com/zufang/changping/pg1rco11/',
+        'https://bj.lianjia.com/zufang/daxing/pg1rco11l0/',
+        'https://bj.lianjia.com/zufang/daxing/pg1rco11l1/',
+        'https://bj.lianjia.com/zufang/daxing/pg1rco11l2l3/',
+        'https://bj.lianjia.com/zufang/yizhuangkaifaqu/pg1rco11/',
+        'https://bj.lianjia.com/zufang/shunyi/pg1rco11/',
+        'https://bj.lianjia.com/zufang/fangshan/pg1rco11/',
+        'https://bj.lianjia.com/zufang/mentougou/pg1rco11/',
+        'https://bj.lianjia.com/zufang/pinggu/pg1rco11/',
+        'https://bj.lianjia.com/zufang/huairou/pg1rco11/',
+        'https://bj.lianjia.com/zufang/miyun/pg1rco11/',
+        'https://bj.lianjia.com/zufang/yanqing/pg1rco11/',
+        ]
 
     def parse(self, response):
         # crawl

@@ -8,6 +8,12 @@ from scrapy import signals
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
 import random
+import time
+import requests
+
+proxies = {}
+expire_time = 0
+get_ip_api = 'http://http.tiqu.alicdns.com/getip3?num=1&type=2&pro=0&city=0&yys=0&port=1&time=1&ts=1&ys=0&cs=0&lb=1&sb=0&pb=45&mr=1&regions='
 
 class RentSpiderMiddleware:
     # Not all methods need to be defined. If a method is not defined,
@@ -113,3 +119,46 @@ class RandomUserAgent(object):
  
     def process_request(self, request, spider):
         request.headers.setdefault('User-Agent', random.choice(self.agents))
+
+
+class ProxyMiddleWare(object):  
+    def process_request(self,request, spider):  
+        '''对request对象加上proxy'''  
+        proxy = self.get_proxy()  
+        print("this is request ip:"+proxy)  
+        request.meta['proxy'] = proxy   
+ 
+    def process_response(self, request, response, spider):  
+        # 如果返回的response状态不是200，重新生成当前request对象  
+        if response.status != 200:
+            self.switch_ip()    # 手动换ip（可能这个ip过快了）
+            proxy = self.get_proxy()  
+            print("this is response ip:"+proxy)  
+            # 对当前reque加上代理  
+            request.meta['proxy'] = proxy   
+            return request  
+        return response
+    
+    def get_proxy(self):  
+        global expire_time
+        global proxies
+        current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time() + 20))   # leave 20s for scrapy
+        if current_time > str(expire_time):
+            self.switch_ip()
+        return proxies
+    
+    def switch_ip(self):
+        global get_ip_api
+        global expire_time
+        global proxies
+        res = requests.get(get_ip_api)
+        proxyHost = res.json()['data'][0]['ip']
+        proxyPort = res.json()['data'][0]['port']
+        expire_time = res.json()['data'][0]['expire_time']
+        http_pro = "http://" + str(proxyHost) + ":" + str(proxyPort)
+        #https_pro = "https://" + str(proxyHost) + ":" + str(proxyPort)
+        # proxies = {
+        #     "http" : http_pro,
+        #     "https": https_pro
+        # }
+        proxies = http_pro
