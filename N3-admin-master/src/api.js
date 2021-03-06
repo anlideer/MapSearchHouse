@@ -9,7 +9,7 @@ const API = {
   USER_LOGIN: '/user/login',
   USER_ADD: '/user/add',
   RECORD_LIST: '/user/getRecords',
-  QUERY_LIST: '/user/getRecordsBy'
+  QUERY_LIST: '/user/getRecordsBy',
 }
 
 export default API
