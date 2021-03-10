@@ -8,15 +8,6 @@
           placeholder="输入公司地址"
           v-model="address"
         />
-        <div class="input-result__list" v-if="showSelect && resultList.length">
-          <div
-            class="input-result__item"
-            v-for="item in resultList"
-            :key="item.name"
-            @click="selectedHandle(item.name)">
-            {{item.name}}
-          </div>
-        </div>
       </div>
       <!--<button class="input-btn" @click="handleOk">搜索</button>-->
     </div>
@@ -26,6 +17,7 @@
 
 <script>
 import AMapLoader from '@amap/amap-jsapi-loader';
+import Vue from 'vue/dist/vue.esm.js';
 
 export default {
   name: 'Map',
@@ -36,9 +28,6 @@ export default {
       geocoder: null,
       autoComplete: null,
       address: '',
-      lnglat: null,
-      showSelect: false,
-      resultList: [],
     };
   },
   computed: {
@@ -51,12 +40,13 @@ export default {
         "version": "2.0",   // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
         "plugins": [
           'AMap.ToolBar',
-          'AMap.Geocoder',
           'AMap.PlaceSearch',
           'AMap.Scale',
           'AMap.Geocoder',
           'AMap.AutoComplete',
-          'AMap.Marker'
+          'AMap.Marker',
+          'AMap.InfoWindow',
+          'AMap.Event',
         ],  // 需要使用的的插件列表，如比例尺'AMap.Scale'等
     }).then((AMap)=>{
         var city="北京"
@@ -66,7 +56,9 @@ export default {
         this.map.addControl(toolbar);
         this.map.addControl(scale);
         this.geocoder = new AMap.Geocoder({});
-        this.marker = new AMap.Marker();
+        this.marker = new AMap.Marker({});
+        this.infoWindow = new AMap.InfoWindow({});
+        this.AMap = AMap;
         const autoOptions = {
           //city 限定城市，默认全国
           city: city,
@@ -75,11 +67,11 @@ export default {
         this.autoComplete = new AMap.AutoComplete(autoOptions);
         this.placeSearch = new AMap.PlaceSearch({
           city: city,
-          map: this.map
+          //map: this.map // 因为要自定义窗口，所以自己来标记点以及写
         });
-        this.autoComplete.on('select', this.select)
+        this.autoComplete.on('select', this.select);
     }).catch(e => {
-        console.log(e)
+        console.log(e);
     })
 
   },
@@ -87,8 +79,86 @@ export default {
     select(e){
       console.log(e)
         this.placeSearch.setCity(e.poi.adcode);
-        this.placeSearch.search(e.poi.name);  //关键字查询查询
+        this.placeSearch.search(e.poi.name, this.search_callback);  //关键字查询查询
     },
+
+    // 搜索的回调
+    search_callback(status, result)
+    {
+      if (status == "complete")
+      {
+        console.log(result);
+        this.addPoints(result.poiList.pois);
+      }
+      else
+      {
+        console.log(result);
+      }
+    },
+
+    // 添加可能的公司地点供选择
+    addPoints(points)
+    {
+      this.map.clearMap();
+      for (var i = 0; i < points.length; i++)
+      {
+        this.addOnePoint(points[i]);
+      }
+      this.map.setFitView();
+    },
+
+    // 上面那个功能的添加单点的功能
+    addOnePoint(p)
+    {
+      var location = p.location;
+      var pointMarker = new this.AMap.Marker({
+        map: this.map,
+        position: [location.lng, location.lat]
+      });
+      pointMarker.setExtData(p)
+
+      pointMarker.on('click', this.showPointDetail);
+    },
+
+    showPointDetail(e)
+    {
+      console.log(e.target.getExtData());
+      var p = e.target.getExtData();
+            let that = this;
+      let InfoContent = Vue.extend({
+        template: "<div><div>" + p.name +"</div><br/><div>" + p.address + "</div><br/><div>" + p.type +"</div><br/><button @click='chooseThis'>选定</button></div>",
+        data() {
+          return {
+            content: p,
+          };
+        },
+        methods: {
+          chooseThis(){
+            console.log('choose this!');
+            //console.log('test'+that.address);
+            // 外面写个函数再把选定的这个东西的信息传给它
+            that.chooseCompanyLocation(p);
+          },
+        },
+      });
+      let component = new InfoContent().$mount();
+      //this.infoWindow.setContent(component.$el);
+
+      var iw = new this.AMap.InfoWindow({
+        anchor: 'bottom-center',
+        content: component.$el
+      })
+      var location = p.location;
+      iw.open(this.map, [location.lng, location.lat]);
+    },
+
+    chooseCompanyLocation(p)
+    {
+      console.log('choose this!!!outer');
+      console.log(p);
+    },
+
+
   },
 };
 </script>
@@ -154,4 +224,6 @@ export default {
 .map-img {
   margin: 0 0 30px;
 }
+
+
 </style>
