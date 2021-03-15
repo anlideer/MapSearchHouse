@@ -28,6 +28,12 @@ export default {
       geocoder: null,
       autoComplete: null,
       address: '',
+      infoWindow: null,
+      arrivalRange: null,
+      polygons: [],
+      companyPosition: [],
+      travelTime: 30,
+      travelMethod: 0,
     };
   },
   computed: {
@@ -47,6 +53,10 @@ export default {
           'AMap.Marker',
           'AMap.InfoWindow',
           'AMap.Event',
+          'AMap.Icon',
+          'AMap.Polygon',
+          'AMap.ArrivalRange',
+
         ],  // 需要使用的的插件列表，如比例尺'AMap.Scale'等
     }).then((AMap)=>{
         var city="北京"
@@ -58,6 +68,7 @@ export default {
         this.geocoder = new AMap.Geocoder({});
         this.marker = new AMap.Marker({});
         this.infoWindow = new AMap.InfoWindow({});
+        this.arrivalRange = new AMap.ArrivalRange();
         this.AMap = AMap;
         const autoOptions = {
           //city 限定城市，默认全国
@@ -80,6 +91,7 @@ export default {
       console.log(e)
         this.placeSearch.setCity(e.poi.adcode);
         this.placeSearch.search(e.poi.name, this.search_callback);  //关键字查询查询
+        this.map.clearMap();
     },
 
     // 搜索的回调
@@ -113,7 +125,8 @@ export default {
       var location = p.location;
       var pointMarker = new this.AMap.Marker({
         map: this.map,
-        position: [location.lng, location.lat]
+        position: [location.lng, location.lat],
+        anchor: 'bottom-center'
       });
       pointMarker.setExtData(p)
 
@@ -124,7 +137,7 @@ export default {
     {
       console.log(e.target.getExtData());
       var p = e.target.getExtData();
-            let that = this;
+      let that = this;
       let InfoContent = Vue.extend({
         template: "<div><div>" + p.name +"</div><br/><div>" + p.address + "</div><br/><div>" + p.type +"</div><br/><button @click='chooseThis'>选定</button></div>",
         data() {
@@ -135,7 +148,6 @@ export default {
         methods: {
           chooseThis(){
             console.log('choose this!');
-            //console.log('test'+that.address);
             // 外面写个函数再把选定的这个东西的信息传给它
             that.chooseCompanyLocation(p);
           },
@@ -144,18 +156,77 @@ export default {
       let component = new InfoContent().$mount();
       //this.infoWindow.setContent(component.$el);
 
-      var iw = new this.AMap.InfoWindow({
+      this.infoWindow = new this.AMap.InfoWindow({
         anchor: 'bottom-center',
         content: component.$el
       })
       var location = p.location;
-      iw.open(this.map, [location.lng, location.lat]);
+      this.infoWindow.open(this.map, [location.lng, location.lat]);
+    },
+
+    drawPolygons(status, result){
+      console.log(result);
+      this.polygons = [];
+      if(result.bounds){
+        for(var i=0;i<result.bounds.length;i++){
+           var polygon = new this.AMap.Polygon({
+                fillColor:"#3366FF",
+                fillOpacity:"0.4",
+                strokeColor:"#00FF00",
+                strokeOpacity:"0.5",
+                strokeWeight:1
+            });
+            polygon.setPath(result.bounds[i]);
+            this.polygons.push(polygon);
+        }
+        this.map.add(this.polygons);
+        this.map.setFitView();
+      }
+      
     },
 
     chooseCompanyLocation(p)
     {
-      console.log('choose this!!!outer');
       console.log(p);
+      this.companyPosition = [p.location.lng, p.location.lat];
+      if (this.infoWindow != null){
+        this.infoWindow.close();
+        this.infoWindow = null;
+      }
+      // 先把点给清除只剩选定的工作地点
+      this.map.clearMap();    
+      new this.AMap.Marker({
+        map: this.map,
+        position: [p.location.lng, p.location.lat],
+      })
+
+      // 公交到达圈，绘制多边形
+      this.arrivalRange.search(this.companyPosition, this.travelTime, this.drawPolygons,
+      //, function(status, result){
+      //       that.polygons = [];
+      //       console.log(result);
+      //       if(result.bounds){
+
+      //           for(var i=0;i<result.bounds.length;i++){
+      //              var polygon = new that.AMap.Polygon({
+      //                   fillColor:"#3366FF",
+      //                   fillOpacity:"0.4",
+      //                   strokeColor:"#00FF00",
+      //                   strokeOpacity:"0.5",
+      //                   strokeWeight:1
+      //               });
+      //               polygon.setPath(result.bounds[i]);
+      //               this.polygons.push(polygon);
+      //           }
+      //           that.map.add(that.polygons);
+      //           that.map.setFitView();
+      //        }
+      // }, 
+      {
+        policy: this.travelMethod
+      })
+
+
     },
 
 
