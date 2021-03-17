@@ -7,9 +7,28 @@
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
 import pymongo
+import requests
 
 class RentPipeline:
     def process_item(self, item, spider):
+        try:
+            # get longitude and latitude
+            url = 'https://restapi.amap.com/v3/geocode/geo'
+            params = {
+                'key': 'eba3e6f19de198bbf4d41ab24e628f6f',
+                'address': ''.join(item['location']),
+                'city': '北京'
+            }
+            r = requests.get(url, params=params)
+            res = r.json()
+            if res['status'] == '1':
+                geo = res['geocodes'][0]
+                info = geo['location'].split(',')
+                item['longitude'] = info[0]
+                item['latitude'] = info[1]
+        except Exception as e:
+            print('ERROR fetching longitude and latitude')
+            print(e)
         print(item)
         return item
 

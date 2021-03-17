@@ -16,3 +16,5 @@ class RentItem(scrapy.Item):
     rooms = scrapy.Field()
     photo = scrapy.Field()
     price = scrapy.Field()
+    longitude = scrapy.Field()
+    latitude = scrapy.Field()

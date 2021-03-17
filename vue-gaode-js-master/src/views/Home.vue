@@ -200,32 +200,12 @@ export default {
         position: [p.location.lng, p.location.lat],
       })
 
-      // 公交到达圈，绘制多边形
+      // 公交到达圈，绘制多边形，然后筛选一下在范围内的房源
       this.arrivalRange.search(this.companyPosition, this.travelTime, this.drawPolygons,
-      //, function(status, result){
-      //       that.polygons = [];
-      //       console.log(result);
-      //       if(result.bounds){
-
-      //           for(var i=0;i<result.bounds.length;i++){
-      //              var polygon = new that.AMap.Polygon({
-      //                   fillColor:"#3366FF",
-      //                   fillOpacity:"0.4",
-      //                   strokeColor:"#00FF00",
-      //                   strokeOpacity:"0.5",
-      //                   strokeWeight:1
-      //               });
-      //               polygon.setPath(result.bounds[i]);
-      //               this.polygons.push(polygon);
-      //           }
-      //           that.map.add(that.polygons);
-      //           that.map.setFitView();
-      //        }
-      // }, 
-      {
-        policy: this.travelMethod
-      })
-
+        {
+          policy: this.travelMethod
+        }
+      )
 
     },
 
