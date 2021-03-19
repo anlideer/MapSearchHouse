@@ -5,7 +5,7 @@ MONGO_URI = '182.92.223.235:27017'
 MONGO_DB = 'rent'
 MONGO_USER = 'admin'
 MONGO_PW = 'xtt576566'
-MONGO_COLLECTION = 'RentItem'
+MONGO_COLLECTION = 'House'
 collection = None
 
 
@@ -13,15 +13,16 @@ def get_houses(bounds):
     houses = []
     for bound in bounds:
         houses.extend(search_bound(bound[0]))
-    res = dict()
+    res = []
     for house in houses:
-        del house['_id']
-        location = ''.join(house['location'])
-        if location in res:
-            res[location].append(house)
-        else:
-            res[location] = [house]
+        res.append({
+            'location': house['location'],
+            'longitude': house['longitude'],
+            'latitude': house['latitude'],
+            'number': len(house['houseList'])
+        })
     return res
+
 
 def search_bound(bound):
     bound_str = ''

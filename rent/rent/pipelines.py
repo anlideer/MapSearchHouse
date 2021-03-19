@@ -16,7 +16,7 @@ class RentPipeline:
             url = 'https://restapi.amap.com/v3/geocode/geo'
             params = {
                 'key': 'eba3e6f19de198bbf4d41ab24e628f6f',
-                'address': ''.join(item['location']),
+                'address': ' '.join(item['location']),
                 'city': '北京'
             }
             r = requests.get(url, params=params)
@@ -51,6 +51,7 @@ class MongoPipeline(object):
     def open_spider(self, spider):
         self.client = pymongo.MongoClient(self.mongo_uri, username=self.mongo_user, password=self.mongo_pw)
         self.db = self.client[self.mongo_db]
+        self.db['RentItem'].drop()  # 防止上一次爬的还在这
 
     def process_item(self, item, spider):
         name = item.__class__.__name__
