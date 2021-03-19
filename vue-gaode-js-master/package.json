@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@amap/amap-jsapi-loader": "0.0.7",
+    "axios": "^0.21.1",
     "core-js": "^3.6.4",
     "moment": "^2.26.0",
     "vue": "^2.6.11",

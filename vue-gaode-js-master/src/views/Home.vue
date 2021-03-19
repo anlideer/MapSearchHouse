@@ -181,8 +181,26 @@ export default {
         }
         this.map.add(this.polygons);
         this.map.setFitView();
+
+        // 从后端拿到所有在区域内的房源
+        this.$axios({
+          url: 'http://182.92.223.235:8888/searchHouses',
+          method: 'post',
+          data: {
+            bounds: result.bounds
+          }
+        }).then(res => 
+        {
+          console.log('ok');
+          console.log(res);
+          console.log(res.data);
+        }).catch(function (error) { // 请求失败处理
+          console.log('error');
+          console.log(error);
+        });
+
       }
-      
+
     },
 
     chooseCompanyLocation(p)
