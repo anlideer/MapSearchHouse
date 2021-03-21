@@ -18,3 +18,4 @@ class RentItem(scrapy.Item):
     price = scrapy.Field()
     longitude = scrapy.Field()
     latitude = scrapy.Field()
+    lnglat = scrapy.Field()

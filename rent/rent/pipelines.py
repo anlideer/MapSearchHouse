@@ -26,6 +26,7 @@ class RentPipeline:
                 info = geo['location'].split(',')
                 item['longitude'] = info[0]
                 item['latitude'] = info[1]
+                item['lnglat'] = [info[0], info[1]]
         except Exception as e:
             print('ERROR fetching longitude and latitude')
             print(e)

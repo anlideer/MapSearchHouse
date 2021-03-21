@@ -6,8 +6,12 @@ MONGO_DB = 'rent'
 MONGO_USER = 'admin'
 MONGO_PW = 'xtt576566'
 MONGO_COLLECTION = 'House'
+MONGO_RAW_COLLECTION = 'RentItem'
 collection = None
+raw_collection = None
 
+def get_all_houses():
+    return list(raw_collection.find())
 
 def get_houses(bounds):
     houses = []
@@ -36,7 +40,8 @@ def search_bound(bound):
 
 def get_collection():
     global collection
+    global raw_collection
     client = pymongo.MongoClient(MONGO_URI, username=MONGO_USER, password=MONGO_PW)
     db = client[MONGO_DB]
     collection = db[MONGO_COLLECTION]
-
+    raw_collection = db[MONGO_RAW_COLLECTION]

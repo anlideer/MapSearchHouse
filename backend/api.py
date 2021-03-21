@@ -32,6 +32,12 @@ def search_houses():
         resu = {'code': 10001, 'message': 'Invalid data. Usage: data: {"bounds": []}'}
         return json.dumps(resu, ensure_ascii=False)
 
+# get all houses
+@server.route('/getAll', methods=['get'])
+def get_all():
+    resu = {'code': 200, 'message': 'ok', 'data': house_service.get_all_houses()}
+    return json.dumps(resu, ensure_ascii=False)
+
 
 if __name__ == '__main__':
     server.run(debug=True, port=8888, host='0.0.0.0') # 指定端口、host,0.0.0.0代表不管几个网卡，任何ip都可以访问
