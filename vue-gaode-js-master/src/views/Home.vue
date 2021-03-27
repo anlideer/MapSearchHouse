@@ -34,6 +34,8 @@ export default {
       companyPosition: [],
       travelTime: 30,
       travelMethod: 0,
+      allHouses: [],
+      cluster: null,
     };
   },
   computed: {
@@ -56,7 +58,7 @@ export default {
           'AMap.Icon',
           'AMap.Polygon',
           'AMap.ArrivalRange',
-          //'AMap.MarkerCluster',
+          'AMap.MarkerCluster',
 
         ],  // 需要使用的的插件列表，如比例尺'AMap.Scale'等
     }).then((AMap)=>{
@@ -82,11 +84,12 @@ export default {
           //map: this.map // 因为要自定义窗口，所以自己来标记点以及写
         });
         this.autoComplete.on('select', this.select);
+
+        this.showAllHouses();
     }).catch(e => {
         console.log(e);
     })
 
-    //this.showAllHouses();
   },
   methods: {
     select(e){
@@ -96,81 +99,67 @@ export default {
         this.map.clearMap();
     },
 
-    // showAllHouses(){
-    //     // 从后端拿到所有房源
-    //     console.log('fetching houses...');
-    //     this.$axios({
-    //       url: 'http://182.92.223.235:8888/getAll',
-    //       method: 'get'
-    //     }).then(res => 
-    //     {
-    //       console.log(res);
-    //       if (res.data.code == 200){
-    //         var houses = res.data.data;
-    //         console.log(houses);
-    //       }
-    //       else{
-    //         console.log(res.data);
-    //       }
-    //     }).catch(function (error) { // 请求失败处理
-    //       console.log('error');
-    //       console.log(error);
-    //     });
-
-    // },
-
-    // addHouses(points){
-    //   var gridSize = 60;
-    //   var cluster;
-    //   // 数据中需包含经纬度信息字段 lnglat
-    //   // var points = [
-    //       // { lnglat: ["108.939621", "34.343147"] },
-    //       // { lnglat: ["112.985037", "23.15046"] },
-    //       // ...
-    //       // ...
-    //   // ]
-    //   var count = points.length;
-    //   var that = this;
-
-    //   var _renderClusterMarker = function (context) {
-    //       var factor = Math.pow(context.count / count, 1 / 18);
-    //       var div = document.createElement('div');
-    //       var Hue = 180 - factor * 180;
-    //       var bgColor = 'hsla(' + Hue + ',100%,40%,0.7)';
-    //       var fontColor = 'hsla(' + Hue + ',100%,90%,1)';
-    //       var borderColor = 'hsla(' + Hue + ',100%,40%,1)';
-    //       var shadowColor = 'hsla(' + Hue + ',100%,90%,1)';
-    //       div.style.backgroundColor = bgColor;
-    //       var size = Math.round(30 + Math.pow(context.count / count, 1 / 5) * 20);
-    //       div.style.width = div.style.height = size + 'px';
-    //       div.style.border = 'solid 1px ' + borderColor;
-    //       div.style.borderRadius = size / 2 + 'px';
-    //       div.style.boxShadow = '0 0 5px ' + shadowColor;
-    //       div.innerHTML = context.count;
-    //       div.style.lineHeight = size + 'px';
-    //       div.style.color = fontColor;
-    //       div.style.fontSize = '14px';
-    //       div.style.textAlign = 'center';
-    //       context.marker.setOffset(new that.AMap.Pixel(-size / 2, -size / 2));
-    //       context.marker.setContent(div)
-    //   };
-    //   var _renderMarker = function(context) {
-    //       var content = '<div style="background-color: hsla(180, 100%, 50%, 0.3); height: 18px; width: 18px; border: 1px solid hsl(180, 100%, 40%); border-radius: 12px; box-shadow: hsl(180, 100%, 50%) 0px 0px 3px;"></div>';
-    //       var offset = new that.AMap.Pixel(-9, -9);
-    //       context.marker.setContent(content)
-    //       context.marker.setOffset(offset)
-    //   }
-
-    //     if (cluster) {
-    //         cluster.setMap(null);
-    //     }
-    //     cluster = new this.AMap.MarkerCluster(this.map, points, {
-    //         gridSize: gridSize, // 设置网格像素大小
-    //         renderClusterMarker: _renderClusterMarker, // 自定义聚合点样式
-    //         renderMarker: _renderMarker, // 自定义非聚合点样式
-    //     });
-    // },
+    showAllHouses(){
+        // 从静态文件拿到所有房源
+        console.log('fetching houses...');
+        this.$axios.get('/json/houses.json').then(res => 
+        {
+          if (res.status == 200)
+          {
+            this.allHouses = res.data;
+            for (var i = 0; i < this.allHouses.length; i++){
+              this.allHouses[i]['lnglat'] = [this.allHouses[i]['longitude'], this.allHouses[i]['latitude']];
+            }
+            console.log('house json loaded');
+          }
+          else{
+            console.log('failed to load house json.')
+            console.log(res);
+          }
+        }).catch(function (error) { // 请求失败处理
+          console.log('error');
+          console.log(error);
+        });
+    },
     
+    // 海量点标记
+    addHouseCluster()
+    {
+      if (this.cluster != null){
+        this.cluster.setMap(this.map);
+      }
+      if (this.allHouses == []){
+        console.log('no house');
+        return;
+      }
+      var sts = [{
+                url: "//a.amap.com/jsapi_demos/static/images/blue.png",
+                size: new this.AMap.Size(32, 32),
+                offset: new this.AMap.Pixel(-16, -16)
+            }, {
+                url: "//a.amap.com/jsapi_demos/static/images/green.png",
+                size: new this.AMap.Size(32, 32),
+                offset: new this.AMap.Pixel(-16, -16)
+            }, {
+                url: "//a.amap.com/jsapi_demos/static/images/orange.png",
+                size: new this.AMap.Size(36, 36),
+                offset: new this.AMap.Pixel(-18, -18)
+            }, {
+                url: "//a.amap.com/jsapi_demos/static/images/red.png",
+                size: new this.AMap.Size(48, 48),
+                offset: new this.AMap.Pixel(-24, -24)
+            }, {
+                url: "//a.amap.com/jsapi_demos/static/images/darkRed.png",
+                size: new this.AMap.Size(48, 48),
+                offset: new this.AMap.Pixel(-24, -24)
+            }];
+      var gridSize = 60;
+      this.cluster = new this.AMap.MarkerCluster(this.map, this.allHouses, {
+          styles: sts,
+          gridSize: gridSize 
+      });
+
+    },
 
     // 搜索的回调
     search_callback(status, result)
@@ -232,7 +221,6 @@ export default {
         },
       });
       let component = new InfoContent().$mount();
-      //this.infoWindow.setContent(component.$el);
 
       this.infoWindow = new this.AMap.InfoWindow({
         anchor: 'bottom-center',
@@ -258,32 +246,53 @@ export default {
             this.polygons.push(polygon);
         }
         this.map.add(this.polygons);
-        this.map.setFitView();
 
-        // 从后端拿到所有在区域内的房源
-        this.$axios({
-          url: 'http://182.92.223.235:8888/searchHouses',
-          method: 'post',
-          data: {
-            bounds: result.bounds
-          }
-        }).then(res => 
-        {
-          if (res.data.code == 200){
-            var houses = res.data.data;
-            console.log(houses);
-          }
-          else{
-            console.log(res.data);
-          }
-        }).catch(function (error) { // 请求失败处理
-          console.log('error');
-          console.log(error);
-        });
+        this.addHouseCluster();
+
+        // var that = this;
+        // // 从后端拿到所有在区域内的房源
+        // this.$axios({
+        //   url: 'http://182.92.223.235:8888/searchHouses',
+        //   method: 'post',
+        //   data: {
+        //     bounds: result.bounds
+        //   }
+        // }).then(res => 
+        // {
+        //   if (res.data.code == 200){
+        //     var houses = res.data.data;
+        //     console.log(houses);
+        //     that.showHousesSearch(houses); 
+        //   }
+        //   else{
+        //     console.log(res.data);
+        //   }
+        // }).catch(function (error) { // 请求失败处理
+        //   console.log('error');
+        //   console.log(error);
+        // });
 
       }
 
     },
+    // // 显示检索得到的房源
+    // showHousesSearch(houses)
+    // {
+    //   var points = [];
+    //   for(var i = 0; i < houses.length; i++){
+    //     var house = houses[i];
+    //     var point = new this.AMap.Marker({
+    //       map: this.map,
+    //       position: [house.lnglat[0], house.lnglat[1]],
+    //       title: house.location + '-' + house.number + '个房源',
+    //       anchor: 'bottom-center',
+    //     })
+    //     // TODO: content defined
+
+    //     points.push(point);
+    //   }
+    //   this.map.add(points);
+    // },
 
     chooseCompanyLocation(p)
     {
@@ -301,6 +310,7 @@ export default {
         icon: '//vdata.amap.com/icons/b18/1/2.png',
         offset: new this.AMap.Pixel(-10, -10),
         anchor: 'center',
+        //anchor: 'bottom-center',
       })
 
       // 公交到达圈，绘制多边形，然后筛选一下在范围内的房源
@@ -314,6 +324,15 @@ export default {
 
 
   },
+  
+  watch: {
+    address: function(){
+      this.map.clearMap();
+      if (this.cluster != null){
+        this.cluster.setMap(null);
+      }
+    }
+  }
 };
 </script>
 
@@ -324,8 +343,8 @@ export default {
 
 #container {
   margin: 30px auto;
-  width: 750px;
-  height: 300px;;
+  width: 1500px;
+  height: 500px;;
 }
 
 .input {

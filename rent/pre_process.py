@@ -23,7 +23,7 @@ def generate_dict():
     res = dict()
     houses = list(collection.find())
     for house in houses:
-        if 'longitude' not in house:
+        if 'lnglat' not in house:
             new_house = get_gps(house)
             if new_house != None:
                 house = new_house
@@ -36,10 +36,12 @@ def generate_dict():
             res[location] = [house]
 
     for key in res:
+        tmp = res[key][0]['lnglat']
         single = {
             'location': key,
-            'longitude': res[key][0]['longitude'],
-            'latitude': res[key][0]['latitude'],
+            'lnglat': tmp,
+            'longitude': tmp[0],
+            'latitude': tmp[1],
             'houseList': res[key]
         }
         new_collection.insert(single)
@@ -59,10 +61,9 @@ def get_gps(house):
         if res['status'] == '1':
             geo = res['geocodes'][0]
             info = geo['location'].split(',')
-            collection.update({'link': house['link']}, {'$set': {'longitude': info[0], 'latitude': info[1]}})
+            collection.update({'link': house['link']}, {'$set': {'lnglat': [info[0], info[1]]}})
             print('updated ' + house['link'])
-            house['longitude'] = info[0]
-            house['latitude'] = info[1]
+            house['lnglat'] = [info[0], info[1]]
             return house
     except Exception as e:
         print('ERROR fetching longitude and latitude')
