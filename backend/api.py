@@ -8,13 +8,13 @@ import user_service
 
 house_service.get_collection()
 server = flask.Flask(__name__)
-CORS(server)
+CORS(server)    # 跨域设置
 
-# test service
-@server.route('/test', methods=['get'])
-def test_call():
-    resu = {'code': 200, 'message': 'hello world.'}
-    return json.dumps(resu, ensure_ascii=False)
+# # test service
+# @server.route('/test', methods=['get'])
+# def test_call():
+#     resu = {'code': 200, 'message': 'hello world.'}
+#     return json.dumps(resu, ensure_ascii=False)
 
 # get houses by bounds
 # data: {'bounds': []}

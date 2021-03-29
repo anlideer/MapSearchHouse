@@ -156,9 +156,50 @@ export default {
       var gridSize = 60;
       this.cluster = new this.AMap.MarkerCluster(this.map, this.allHouses, {
           styles: sts,
-          gridSize: gridSize 
+          gridSize: gridSize,
+          clusterByZoomChange: true,
       });
 
+      this.cluster.on('click', this.showHouseDetail);
+
+    },
+
+    // 点击房源标记点后
+    showHouseDetail(e)
+    {
+      //console.log(e);
+      var chosenData = e.clusterData;
+      if (chosenData.length > 1)
+      {
+        this.map.setZoomAndCenter(this.map.getZoom() + 1, e.lnglat, true);
+      }
+      else{
+        // 显示信息窗体
+        var singleData = chosenData[0];
+        //let that = this;
+        let InfoContent = Vue.extend({
+          template: "<div><div>" + singleData.location  + '-' + singleData.houseNum +  "</div>",
+          data() {
+            return {
+              content: singleData,
+            };
+          },
+          methods: {
+            // chooseThis(){
+            //   console.log('choose this!');
+            //   // 外面写个函数再把选定的这个东西的信息传给它
+            //   that.chooseCompanyLocation(p);
+            // },
+          },
+        });
+        let component = new InfoContent().$mount();
+
+        this.infoWindow = new this.AMap.InfoWindow({
+          anchor: 'bottom-center',
+          content: component.$el
+        })
+        this.infoWindow.open(this.map, singleData.lnglat); 
+        }
     },
 
     // 搜索的回调
