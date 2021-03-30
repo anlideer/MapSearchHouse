@@ -93,7 +93,7 @@ export default {
   },
   methods: {
     select(e){
-      console.log(e)
+        //console.log(e)
         this.placeSearch.setCity(e.poi.adcode);
         this.placeSearch.search(e.poi.name, this.search_callback);  //关键字查询查询
         this.map.clearMap();
@@ -176,30 +176,66 @@ export default {
       else{
         // 显示信息窗体
         var singleData = chosenData[0];
-        //let that = this;
-        let InfoContent = Vue.extend({
-          template: "<div><div>" + singleData.location  + '-' + singleData.houseNum +  "</div>",
-          data() {
-            return {
-              content: singleData,
-            };
-          },
-          methods: {
-            // chooseThis(){
-            //   console.log('choose this!');
-            //   // 外面写个函数再把选定的这个东西的信息传给它
-            //   that.chooseCompanyLocation(p);
-            // },
-          },
-        });
-        let component = new InfoContent().$mount();
+        this.$axios({
+            url: 'http://182.92.223.235:8888/getHouseList',
+            method: 'post',
+            data: {
+              'locationName': singleData.location,
+            }
+        }).then(res=>{
+          console.log(res.data);
+          if (res.data['code'] != "200")
+          {
+            console.log('error' + res.data['message']);
+          }
+          else{
+            var houseHtml = ''
+            var houseList = res.data.data;
+            for (var i = 0; i < houseList.length; i++){
+              var h = houseList[i];
+              var tmpStr = '<div>';
+              tmpStr += '<a href=https://dt.lianjia.com/zufang/'+ h['link'].toString() + ' target="_blank">' + h['title'] + '</a>';
+              // 图片爬虫部分有点问题，爬下来的链接都没有图像的
+              //tmpStr += '<br/><img src="' + h['photo'].toString()  +'" height="100"/>'
+              tmpStr += '<div>价格：' + h['price'].toString() + '元/月</div>'
+              tmpStr += '<div>' + h['rooms'] + ' 面积: ' + h['area'] + '</div>'
+              tmpStr += '</div><br/>';
+              houseHtml += tmpStr;
+            }
+            //let that = this;
+            let InfoContent = Vue.extend({
+              template: '<div> <div id="scrolltest" style="overflow:auto; height:300px; width: 300px;"> <div>' 
+              + singleData.location  + '-' + singleData.houseNum + '房源</div><br/>'
+              + houseHtml
+              + '</div></div>',
+              data() {
+                return {
 
-        this.infoWindow = new this.AMap.InfoWindow({
-          anchor: 'bottom-center',
-          content: component.$el
-        })
-        this.infoWindow.open(this.map, singleData.lnglat); 
-        }
+                };
+              },
+              methods: {
+                // chooseThis(){
+                //   console.log('choose this!');
+                //   // 外面写个函数再把选定的这个东西的信息传给它
+                //   that.chooseCompanyLocation(p);
+                // },
+              },
+            });
+            let component = new InfoContent().$mount();
+
+            this.infoWindow = new this.AMap.InfoWindow({
+              anchor: 'bottom-center',
+              content: component.$el
+            })
+            this.infoWindow.open(this.map, singleData.lnglat); 
+
+          }
+          
+          }).catch(function (error) { // 请求失败处理
+            console.log('error');
+            console.log(error);
+          });
+      }
     },
 
     // 搜索的回调
@@ -243,7 +279,7 @@ export default {
 
     showPointDetail(e)
     {
-      console.log(e.target.getExtData());
+      //console.log(e.target.getExtData());
       var p = e.target.getExtData();
       let that = this;
       let InfoContent = Vue.extend({
@@ -255,7 +291,7 @@ export default {
         },
         methods: {
           chooseThis(){
-            console.log('choose this!');
+            //console.log('choose this!');
             // 外面写个函数再把选定的这个东西的信息传给它
             that.chooseCompanyLocation(p);
           },
@@ -272,7 +308,7 @@ export default {
     },
 
     drawPolygons(status, result){
-      console.log(result);
+      //console.log(result);
       this.polygons = [];
       if(result.bounds){
         for(var i=0;i<result.bounds.length;i++){

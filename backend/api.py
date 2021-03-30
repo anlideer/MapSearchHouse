@@ -16,27 +16,41 @@ CORS(server)    # 跨域设置
 #     resu = {'code': 200, 'message': 'hello world.'}
 #     return json.dumps(resu, ensure_ascii=False)
 
-# get houses by bounds
-# data: {'bounds': []}
-@server.route('/searchHouses', methods=['post'])
-def search_houses():
-    # print('search houses', file=sys.stdout)
-    # print(request.data, file=sys.stdout)
+# data: {'locationName': ''}
+@server.route('/getHouseList', methods=['post'])
+def getHouseList():
     data = request.data
-    bounds = json.loads(data, encoding='utf-8')['bounds']
-    if bounds:
-        r = house_service.get_houses(bounds)
+    location_name = json.loads(data, encoding='utf-8')['locationName']
+    if location_name:
+        r = house_service.get_house_list(location_name)
+        print(r, file=sys.stdout)
         resu = {'code': 200, 'message': 'ok', 'data': r}
         return json.dumps(resu, ensure_ascii=False)
     else:
-        resu = {'code': 10001, 'message': 'Invalid data. Usage: data: {"bounds": []}'}
-        return json.dumps(resu, ensure_ascii=False)
+        resu = {'code': 10001, 'message': 'Invalid data. Usage: data: {"locationName": ""}'}
+        return json.dumps(resu, ensure_ascii=False)        
 
-# get all houses
-@server.route('/getAll', methods=['get'])
-def get_all():
-    resu = {'code': 200, 'message': 'ok', 'data': house_service.get_all_houses()}
-    return json.dumps(resu, ensure_ascii=False)
+# # get houses by bounds
+# # data: {'bounds': []}
+# @server.route('/searchHouses', methods=['post'])
+# def search_houses():
+#     # print('search houses', file=sys.stdout)
+#     # print(request.data, file=sys.stdout)
+#     data = request.data
+#     bounds = json.loads(data, encoding='utf-8')['bounds']
+#     if bounds:
+#         r = house_service.get_houses(bounds)
+#         resu = {'code': 200, 'message': 'ok', 'data': r}
+#         return json.dumps(resu, ensure_ascii=False)
+#     else:
+#         resu = {'code': 10001, 'message': 'Invalid data. Usage: data: {"bounds": []}'}
+#         return json.dumps(resu, ensure_ascii=False)
+
+# # get all houses
+# @server.route('/getAll', methods=['get'])
+# def get_all():
+#     resu = {'code': 200, 'message': 'ok', 'data': house_service.get_all_houses()}
+#     return json.dumps(resu, ensure_ascii=False)
 
 
 if __name__ == '__main__':
