@@ -18,9 +18,12 @@ def get_collection():
     db = client[MONGO_DB]
     collection = db['RentItem']
     new_collection = db['House']
+    try:
+        new_collection.drop()
 
 def generate_dict():
     res = dict()
+    lnglat_dict = dict()
     houses = list(collection.find())
     for house in houses:
         if 'lnglat' not in house:
@@ -34,6 +37,26 @@ def generate_dict():
             res[location].append(house)
         else:
             res[location] = [house]
+
+    # 合并一下经纬度相同的
+    for key in res:
+        lnglat = res[key][0]['lnglat']
+        if lnglat in lnglat_dict:
+            lnglat_dict[lnglat].append(key)
+        else:
+            lnglat_dict[lnglat] = [key]
+    for key in lnglat_dict:
+        if len(lnglat_dict[key]) > 1:
+            arr = lnglat_dict[key]
+            tmp = []
+            new_location = ''
+            for h in arr:
+                if new_location != '':
+                    new_location += '&'
+                new_location += h
+                tmp.extend(res[h])
+                del res[h]
+            res[new_location] = tmp
 
     for key in res:
         tmp = res[key][0]['lnglat']

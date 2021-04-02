@@ -44,7 +44,7 @@ class RentSpider(scrapy.Spider):
             item = RentItem()
             item['link'] = house.css('a::attr(href)').get()
             item['title'] = house.css('a::attr(title)').get()
-            item['photo'] = house.css('a').css('img::attr(src)').get()
+            item['photo'] = house.css('a').css('img::attr(data-src)').get() # 懒加载的真实图片链接不在src
             item['location'] = house.css('.content__list--item--des').css('a::text').getall()
             infos = house.css('.content__list--item--des::text').getall()
             if len(infos) > 7:
