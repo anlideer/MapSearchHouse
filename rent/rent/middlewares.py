@@ -125,7 +125,7 @@ class ProxyMiddleWare(object):
     def process_request(self,request, spider):  
         '''对request对象加上proxy'''  
         proxy = self.get_proxy()  
-        print("this is request ip:"+proxy)  
+        #print("this is request ip:"+proxy)  
         request.meta['proxy'] = proxy   
  
     def process_response(self, request, response, spider):  
@@ -133,7 +133,7 @@ class ProxyMiddleWare(object):
         if response.status != 200:
             self.switch_ip()    # 手动换ip（可能这个ip过快了）
             proxy = self.get_proxy()  
-            print("this is response ip:"+proxy)  
+            #print("this is response ip:"+proxy)  
             # 对当前reque加上代理  
             request.meta['proxy'] = proxy   
             return request  

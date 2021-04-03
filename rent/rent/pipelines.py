@@ -30,7 +30,7 @@ class RentPipeline:
         except Exception as e:
             print('ERROR fetching longitude and latitude')
             print(e)
-        print(item)
+        #print(item)
         return item
 
 

@@ -34,6 +34,10 @@ DOWNLOAD_DELAY = 1
 CONCURRENT_REQUESTS_PER_DOMAIN = 16
 CONCURRENT_REQUESTS_PER_IP = 16
 
+# Retry settings
+RETRY_ENABLED = True
+RETRY_TIMES = 5
+
 # Disable cookies (enabled by default)
 #COOKIES_ENABLED = False
 
@@ -59,6 +63,7 @@ SPIDER_MIDDLEWARES = {
 DOWNLOADER_MIDDLEWARES = {
 #    'rent.middlewares.RentDownloaderMiddleware': 543,
     'rent.middlewares.ProxyMiddleWare': 700,
+    'scrapy.downloadermiddlewares.retry.RetryMiddleware': 550,
 }
 
 # Enable or disable extensions
