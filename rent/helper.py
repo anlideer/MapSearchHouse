@@ -28,16 +28,17 @@ def add_lnglat():
 def export_json():
     cursor = collection.find({})
     with open('collection.json', 'w', encoding='utf-8') as file:
-        file.write('[')
+        i = 0
         for document in cursor:
+            if i != 0:
+                file.write('||')
             del document["lnglat"]
             del document["_id"]
             document["houseNum"] = len(document["houseList"])
             del document["houseList"]
             s = dumps(document, indent=1, ensure_ascii=False)#.encode('utf8')
             file.write(str(s))
-            file.write(',')
-        file.write(']')
+            i += 1
 
 if __name__ == '__main__':
     # get_collection()

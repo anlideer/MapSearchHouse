@@ -20,6 +20,8 @@ def get_collection():
     new_collection = db['House']
     try:
         new_collection.drop()
+    except:
+        pass
 
 def generate_dict():
     res = dict()
@@ -40,7 +42,7 @@ def generate_dict():
 
     # 合并一下经纬度相同的
     for key in res:
-        lnglat = res[key][0]['lnglat']
+        lnglat = ','.join(res[key][0]['lnglat'])
         if lnglat in lnglat_dict:
             lnglat_dict[lnglat].append(key)
         else:
@@ -98,3 +100,4 @@ if __name__ == '__main__':
     print('processing...')
     generate_dict()
     client.close()
+    print('Done')
