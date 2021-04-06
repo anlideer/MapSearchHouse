@@ -107,7 +107,6 @@ export default {
           if (res.status == 200)
           {
             this.allHouses = res.data.split('||');
-            console.log(this.allHouses);
             for (var i = 0; i < this.allHouses.length; i++){
               this.allHouses[i] = JSON.parse(this.allHouses[i]);
               this.allHouses[i]['lnglat'] = [this.allHouses[i]['longitude'], this.allHouses[i]['latitude']];
@@ -195,9 +194,9 @@ export default {
             var houseList = res.data.data;
             for (var i = 0; i < houseList.length; i++){
               var h = houseList[i];
-              var tmpStr = '<div>';
+              var tmpStr = '<div><meta name="referrer" content="no-referrer" />';
               tmpStr += '<a href=https://dt.lianjia.com/zufang/'+ h['link'].toString() + ' target="_blank">' + h['title'] + '</a>';
-              tmpStr += '<br/><img src="' + h['photo'].toString()  +'" height="100"/>'
+              tmpStr += '<br/><img referrer="no-referrer|origin|unsafe-url" src="' + h['photo'].toString()  +'" height="100"/>'
               tmpStr += '<div>价格：' + h['price'].toString() + '元/月</div>'
               tmpStr += '<div>' + h['rooms'] + ' 面积: ' + h['area'] + '</div>'
               tmpStr += '</div><br/>';

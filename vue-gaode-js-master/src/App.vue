@@ -1,27 +1,23 @@
 <template>
   <div id="app">
+    <AppHeader></AppHeader>
     <router-view></router-view>
-    <!--
-    <div class="nav-box">
-      <router-link to="/">Map-Search</router-link> |
-      <router-link to="/marker">Map-Marker</router-link>
-    </div>-->
   </div>
   
 </template>
 
 <script>
+import AppHeader from './views/Header'
 
 export default {
   name: 'App',
+  components: {
+    AppHeader
+  }
 }
 </script>
 
 <style lang="less" scoped>
-.nav-box {
-  padding: 20px 0;
-  text-align: center;
-  font-size: 24px;
-}
+
 </style>
 
