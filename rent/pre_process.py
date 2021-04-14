@@ -1,5 +1,6 @@
 import pymongo
 import requests
+from bson.json_util import dumps
 
 MONGO_URI = '182.92.223.235:27017'
 MONGO_DB = 'rent'
@@ -95,9 +96,36 @@ def get_gps(house):
         print(e)
         return None
 
+def add_lnglat():
+    houses = list(new_collection.find())
+    for house in houses:
+        if 'longitude' in house:
+            new_collection.update({'link': house['link']}, {'$set': {'lnglat': [house['longitude'], house['latitude']]}})
+
+def export_json():
+    cursor = new_collection.find({})
+    with open('houses.json', 'w', encoding='utf-8') as file:
+        i = 0
+        for document in cursor:
+            if i != 0:
+                file.write('||')
+            del document["lnglat"]
+            del document["_id"]
+            document["houseNum"] = len(document["houseList"])
+            del document["houseList"]
+            s = dumps(document, indent=1, ensure_ascii=False)#.encode('utf8')
+            file.write(str(s))
+            i += 1
+
+
 if __name__ == '__main__':
     get_collection()
     print('processing...')
     generate_dict()
+    print('collection House generated.')
+    print('exporting json...')
+    add_lnglat()
+    export_json()
+    print('finish exporting json.')
     client.close()
-    print('Done')
+    print('Done.')

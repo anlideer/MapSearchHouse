@@ -1,5 +1,6 @@
 <template>
   <div class='app-inner'>
+    <br/><br/>
     <div class="input-wrap">
       <div class="input-box">
         <input
@@ -308,7 +309,6 @@ export default {
     },
 
     drawPolygons(status, result){
-      //console.log(result);
       this.polygons = [];
       if(result.bounds){
         for(var i=0;i<result.bounds.length;i++){
@@ -325,51 +325,8 @@ export default {
         this.map.add(this.polygons);
 
         this.addHouseCluster();
-
-        // var that = this;
-        // // 从后端拿到所有在区域内的房源
-        // this.$axios({
-        //   url: 'http://182.92.223.235:8888/searchHouses',
-        //   method: 'post',
-        //   data: {
-        //     bounds: result.bounds
-        //   }
-        // }).then(res => 
-        // {
-        //   if (res.data.code == 200){
-        //     var houses = res.data.data;
-        //     console.log(houses);
-        //     that.showHousesSearch(houses); 
-        //   }
-        //   else{
-        //     console.log(res.data);
-        //   }
-        // }).catch(function (error) { // 请求失败处理
-        //   console.log('error');
-        //   console.log(error);
-        // });
-
       }
-
     },
-    // // 显示检索得到的房源
-    // showHousesSearch(houses)
-    // {
-    //   var points = [];
-    //   for(var i = 0; i < houses.length; i++){
-    //     var house = houses[i];
-    //     var point = new this.AMap.Marker({
-    //       map: this.map,
-    //       position: [house.lnglat[0], house.lnglat[1]],
-    //       title: house.location + '-' + house.number + '个房源',
-    //       anchor: 'bottom-center',
-    //     })
-    //     // TODO: content defined
-
-    //     points.push(point);
-    //   }
-    //   this.map.add(points);
-    // },
 
     chooseCompanyLocation(p)
     {
@@ -384,10 +341,10 @@ export default {
       new this.AMap.Marker({
         map: this.map,
         position: [p.location.lng, p.location.lat],
-        icon: '//vdata.amap.com/icons/b18/1/2.png',
+        //icon: '//vdata.amap.com/icons/b18/1/2.png',
+        icon: '/star.png',  // 问过高德技术客服了，说marker自定义icon显示不正常的问题可能是vue导致的且无原生vue解决方案，所以我重做了图标，显示效果是正常的。
         offset: new this.AMap.Pixel(-10, -10),
         anchor: 'center',
-        //anchor: 'bottom-center',
       })
 
       // 公交到达圈，绘制多边形，然后筛选一下在范围内的房源
@@ -421,7 +378,7 @@ export default {
 #container {
   margin: 30px auto;
   width: 1500px;
-  height: 500px;;
+  height: 550px;;
 }
 
 .input {

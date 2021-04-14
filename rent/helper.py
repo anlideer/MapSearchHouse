@@ -1,4 +1,4 @@
-# 填补字段，爬虫脚本更新后就不用了
+# abandoned because merges with pre_process.py
 import pymongo
 import requests
 #import pandas
