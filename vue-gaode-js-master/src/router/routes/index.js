@@ -6,5 +6,21 @@ export const constantRoutes = [
     meta: {
       title: '地图找房'
     }
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('@/views/Login'),
+    meta: {
+      title: '地图找房登录'
+    }
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: () => import('@/views/Register'),
+    meta: {
+      title: '地图找房注册'
+    }
   }
 ];

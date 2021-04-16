@@ -3,8 +3,8 @@
     <div class="logo-field">
       <img src="../assets/logo.png" class="logo"/> <span>地图找房</span>
     </div>
-      <div class='corner' v-if="hasLogin">收藏夹</div>
-      <div class='corner' v-else>登录</div>
+      <div class='corner' v-if="hasLogin"><a-button>收藏夹</a-button></div>
+      <div v-else class='corner'><a-button>登录</a-button></div>
   </div>
 </template>
 

@@ -3,14 +3,14 @@
     <br/><br/>
     <div class="input-wrap">
       <div class="input-box">
-        <input
+        <a-input
           id="input"
           class="input-text"
           placeholder="输入公司地址"
           v-model="address"
         />
       </div>
-      <!--<button class="input-btn" @click="handleOk">搜索</button>-->
+      <a-button @click="select">搜索</a-button>
     </div>
     <div id="container"></div>
   </div>
