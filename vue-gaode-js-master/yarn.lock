@@ -4176,6 +4176,11 @@
     "minimalistic-assert" "^1.0.0"
     "minimalistic-crypto-utils" "^1.0.1"
 
+"hoek@^5.0.3":
+  "integrity" "sha1-D3+icKHK/rNkpLLd+qM/hk5BV9o="
+  "resolved" "https://registry.npm.taobao.org/hoek/download/hoek-5.0.4.tgz"
+  "version" "5.0.4"
+
 "hoopy@^0.1.4":
   "integrity" "sha1-YJIH1mEQADOpqUAq096mdzgcGx0="
   "resolved" "https://registry.npm.taobao.org/hoopy/download/hoopy-0.1.4.tgz"
@@ -8265,6 +8270,13 @@
   "resolved" "https://registry.npm.taobao.org/vm-browserify/download/vm-browserify-1.1.2.tgz?cache=0&sync_timestamp=1572870717730&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvm-browserify%2Fdownload%2Fvm-browserify-1.1.2.tgz"
   "version" "1.1.2"
 
+"vue-element-multiple-message@^1.0.1":
+  "integrity" "sha1-9DA08KRXiVu+1OsMMnfOLYjN5VQ="
+  "resolved" "https://registry.npm.taobao.org/vue-element-multiple-message/download/vue-element-multiple-message-1.0.1.tgz"
+  "version" "1.0.1"
+  dependencies:
+    "vue" "^2.3.3"
+
 "vue-eslint-parser@^7.0.0":
   "integrity" "sha1-nNvMgj5lawh1B6GRFzK4Z6wQHoM="
   "resolved" "https://registry.npm.taobao.org/vue-eslint-parser/download/vue-eslint-parser-7.1.0.tgz?cache=0&sync_timestamp=1589566521118&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvue-eslint-parser%2Fdownload%2Fvue-eslint-parser-7.1.0.tgz"
@@ -8293,6 +8305,14 @@
     "vue-hot-reload-api" "^2.3.0"
     "vue-style-loader" "^4.1.0"
 
+"vue-message@^1.4.3":
+  "integrity" "sha1-CTOjRhZ3B2VpnwytyDMe7ANjEHo="
+  "resolved" "https://registry.npm.taobao.org/vue-message/download/vue-message-1.4.3.tgz"
+  "version" "1.4.3"
+  dependencies:
+    "hoek" "^5.0.3"
+    "vue" "^2.4.4"
+
 "vue-ref@^2.0.0":
   "version" "2.0.0"
 
@@ -8320,7 +8340,7 @@
   "resolved" "https://registry.npm.taobao.org/vue-template-es2015-compiler/download/vue-template-es2015-compiler-1.9.1.tgz"
   "version" "1.9.1"
 
-"vue@^2.6.0", "vue@^2.6.11", "vue@>=2.5.0":
+"vue@^2.3.3", "vue@^2.4.4", "vue@^2.6.0", "vue@^2.6.11", "vue@>=2.5.0":
   "integrity" "sha1-dllNh31LEiNEBuhONSdcbVFBJcU="
   "resolved" "https://registry.npm.taobao.org/vue/download/vue-2.6.11.tgz"
   "version" "2.6.11"

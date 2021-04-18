@@ -10,7 +10,19 @@
           v-model="address"
         />
       </div>
-      <a-button @click="select">搜索</a-button>
+      <a-dropdown>
+      <a-menu slot="overlay" @click="handleMenuClick">
+        <a-menu-item key="1"> 地铁+公交</a-menu-item>
+        <a-menu-item key="2"> 地铁</a-menu-item>
+        <a-menu-item key="3"> 公交</a-menu-item>
+      </a-menu>
+      <a-button style="margin-left: 8px"> 通勤方式<a-icon type="down" /> </a-button>
+    </a-dropdown>
+    <!-- <a-button @click="select">搜索</a-button> -->
+    价格区间：
+    <a-input-number id="inputNumber" v-model="priceMin" :min="1" @change="onPriceMinChange" />
+    -
+    <a-input-number id="inputNumber2" v-model="priceMax" :min="1" @change="onPriceMaxChange" />
     </div>
     <div id="container"></div>
   </div>
@@ -34,9 +46,11 @@ export default {
       polygons: [],
       companyPosition: [],
       travelTime: 30,
-      travelMethod: 0,
+      travelMethod: 0,  // 0-地铁+公交，1-地铁，2-公交
       allHouses: [],
       cluster: null,
+      priceMin: null,
+      priceMax: null,
     };
   },
   computed: {
@@ -93,6 +107,32 @@ export default {
 
   },
   methods: {
+    handleMenuClick(e) {
+      console.log('choose method', e);
+      if (e=='1'){
+        this.travelMethod = 0;
+      }
+      else if (e=='2'){
+        this.travelMethod = 1;
+      }
+      else {
+        this.travelMethod = 2;
+      }
+    },
+    onPriceMinChange(){
+      console.log(this.priceMin);
+      this.priceMin = parseInt(this.priceMin);
+      // if (isNaN(this.priceMin)){
+      //   this.$message('价格必须是个数字');
+      // }
+    },
+    onPriceMaxChange(){
+      console.log(this.priceMax);
+      this.priceMax = parseInt(this.priceMax);
+      // if (isNaN(this.priceMax)){
+      //   this.$message('价格必须是个数字');
+      // }
+    },
     select(e){
         //console.log(e)
         this.placeSearch.setCity(e.poi.adcode);
@@ -193,8 +233,21 @@ export default {
           else{
             var houseHtml = ''
             var houseList = res.data.data;
+            var pMin = parseInt(this.priceMin);
+            var pMax = parseInt(this.priceMax);
             for (var i = 0; i < houseList.length; i++){
               var h = houseList[i];
+              if (!isNaN(pMin)){
+                if (pMin > h['price'])
+                {
+                  continue;
+                }
+              }
+              if (!isNaN(pMax)){
+                if (pMax < h['price']){
+                  continue;
+                }
+              }
               var tmpStr = '<div><meta name="referrer" content="no-referrer" />';
               tmpStr += '<a href=https://dt.lianjia.com/zufang/'+ h['link'].toString() + ' target="_blank">' + h['title'] + '</a>';
               tmpStr += '<br/><img referrer="no-referrer|origin|unsafe-url" src="' + h['photo'].toString()  +'" height="100"/>'
@@ -203,10 +256,13 @@ export default {
               tmpStr += '</div><br/>';
               houseHtml += tmpStr;
             }
+            if (houseHtml == ''){
+              houseHtml = '<div>抱歉，没有符合设定的价格区间的房源</div>'
+            }
             //let that = this;
             let InfoContent = Vue.extend({
               template: '<div> <div id="scrolltest" style="overflow:auto; height:300px; width: 300px;"> <div>' 
-              + singleData.location  + '-' + singleData.houseNum + '房源</div><br/>'
+              + singleData.location  + '-总共' + singleData.houseNum + '房源</div><br/>'
               + houseHtml
               + '</div></div>',
               data() {
