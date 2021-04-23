@@ -33,6 +33,7 @@
         登录
       </a-button>
     </a-form-item>
+    <div>没有账号？<router-link to='/register'>注册</router-link></div>
   </a-form>
 </div>
 </div>

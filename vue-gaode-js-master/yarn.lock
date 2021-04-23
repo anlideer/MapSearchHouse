@@ -4837,6 +4837,11 @@
     "merge-stream" "^2.0.0"
     "supports-color" "^7.0.0"
 
+"js-md5@^0.7.3":
+  "integrity" "sha1-tPL7sLMnRV9ZjWcn447Ccs0Jw/I="
+  "resolved" "https://registry.npm.taobao.org/js-md5/download/js-md5-0.7.3.tgz"
+  "version" "0.7.3"
+
 "js-message@1.0.5":
   "integrity" "sha1-IwDSSxrwjondCVvBpMnJz8uJLRU="
   "resolved" "https://registry.npm.taobao.org/js-message/download/js-message-1.0.5.tgz"

@@ -1,10 +1,10 @@
 <template>
   <div class="app-header clearfix">
     <div class="logo-field">
-      <img src="../assets/logo.png" class="logo"/> <span>地图找房</span>
+      <router-link to='/'><img src="../assets/logo.png" class="logo"/> <span>地图找房</span></router-link>
     </div>
       <div class='corner' v-if="hasLogin"><a-button>收藏夹</a-button></div>
-      <div v-else class='corner'><a-button>登录</a-button></div>
+      <div v-else class='corner'><router-link to='/login'><a-button>登录</a-button></router-link></div>
   </div>
 </template>
 

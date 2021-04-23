@@ -11,6 +11,7 @@ import DropDown from 'ant-design-vue/lib/dropdown';
 import Menu from 'ant-design-vue/lib/menu';
 import InputNumber from 'ant-design-vue/lib/input-number';
 import 'ant-design-vue/dist/antd.css';
+import md5 from 'js-md5';
 
 Vue.component(Button.name, Button);
 Vue.component(Form.name, Form);
@@ -25,6 +26,7 @@ Vue.component(InputNumber.name, InputNumber);
 // Vue.prototype.$message = Message
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios 
+Vue.prototype.$md5 = md5;
 
 router.beforeEach((to,from,next) =>{
   if(to.meta.title){
