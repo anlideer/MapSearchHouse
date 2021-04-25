@@ -7,6 +7,7 @@ import house_service
 import user_service
 
 house_service.get_collection()
+user_service.get_collection()
 server = flask.Flask(__name__)
 CORS(server)    # 跨域设置
 

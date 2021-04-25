@@ -109,6 +109,20 @@ export default {
         if (!err) {
           // 在这里接注册接口
           console.log('Received values of form: ', values);
+          this.$axios({
+            url: 'http://182.92.223.235:8888/register',
+            method: 'post',
+            data: {
+              'username': values.userName,
+              'password': this.$md5(values.password)
+            }
+          }).then(res => {
+            console.log(res.data)
+            if (res.data['code'] == 200)
+            {
+              this.$message.success('注册成功')
+            }
+          })
         }
       });
     },

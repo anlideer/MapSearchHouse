@@ -3,6 +3,8 @@ import App from './App.vue'
 import router from '@/router';
 import axios from 'axios'
 // import Message from 'vue-message';
+import { Message } from 'element-ui'
+
 import Button from 'ant-design-vue/lib/button';
 import Form from  'ant-design-vue/lib/form';
 import Input from 'ant-design-vue/lib/input';
@@ -27,6 +29,7 @@ Vue.component(InputNumber.name, InputNumber);
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios 
 Vue.prototype.$md5 = md5;
+Vue.prototype.$message = Message
 
 router.beforeEach((to,from,next) =>{
   if(to.meta.title){
