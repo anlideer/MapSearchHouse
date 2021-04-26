@@ -108,7 +108,6 @@ export default {
       this.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
           // 在这里接注册接口
-          console.log('Received values of form: ', values);
           this.$axios({
             url: 'http://182.92.223.235:8888/register',
             method: 'post',
@@ -117,12 +116,24 @@ export default {
               'password': this.$md5(values.password)
             }
           }).then(res => {
-            console.log(res.data)
+            console.log(res.data);
             if (res.data['code'] == 200)
             {
-              this.$message.success('注册成功')
+              this.$message.success('注册成功');
+              this.$router.push({name: 'login'});
             }
-          })
+            else if (res.data['code'] == 10001)
+            {
+              this.$message.warning('用户名已被占用');
+            }
+            else 
+            {
+              this.$message.error('注册失败');
+            }
+          }).catch(e)
+          {
+            console.log(e);
+          }
         }
       });
     },

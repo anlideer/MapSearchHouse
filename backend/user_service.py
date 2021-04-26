@@ -20,7 +20,8 @@ def register(uname, pw):
     else:
         collection.insert({
             'username': uname,
-            'password': pw
+            'password': pw,
+            'stars': []
             })
         return 1 # ok
 

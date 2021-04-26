@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from '@/router';
-import axios from 'axios'
+import axios from 'axios';
 // import Message from 'vue-message';
-import { Message } from 'element-ui'
+// import {Message}from 'element-ui'
 
 import Button from 'ant-design-vue/lib/button';
 import Form from  'ant-design-vue/lib/form';
@@ -12,6 +12,7 @@ import Icon from 'ant-design-vue/lib/icon';
 import DropDown from 'ant-design-vue/lib/dropdown';
 import Menu from 'ant-design-vue/lib/menu';
 import InputNumber from 'ant-design-vue/lib/input-number';
+import Message from 'ant-design-vue/lib/message';
 import 'ant-design-vue/dist/antd.css';
 import md5 from 'js-md5';
 
@@ -24,6 +25,7 @@ Vue.component(DropDown.name, DropDown);
 Vue.component(Menu.name, Menu);
 Vue.component(Menu.Item.name, Menu.Item);
 Vue.component(InputNumber.name, InputNumber);
+// Vue.component(Message.name, Message);
 
 // Vue.prototype.$message = Message
 Vue.config.productionTip = false

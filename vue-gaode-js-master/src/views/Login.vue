@@ -71,8 +71,31 @@ export default {
       e.preventDefault();
       this.form.validateFields((err, values) => {
         if (!err) {
-          // TODO: 在这里接登录接口
-          console.log('Received values of form: ', values);
+          // 在这里接登录接口
+          this.$axios({
+            url: 'http://182.92.223.235:8888/login',
+            method: 'post',
+            data: {
+              'username': values.userName,
+              'password': this.$md5(values.password)
+            }
+          }).then(res => {
+            console.log(res.data);
+            if (res.data['code'] == 200){
+              this.$message.success('登录成功');
+              this.$router.push({name: 'home'});
+            }
+            else if (res.data['code'] == 10001){
+              this.$message.error('密码错误或账户不存在');
+            }
+            else 
+            {
+              this.$message.error('登录失败');
+            }
+          }).catch(e)
+          {
+            console.log(e);
+          }
         }
       });
     },
