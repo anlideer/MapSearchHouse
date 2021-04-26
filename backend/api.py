@@ -31,6 +31,36 @@ def getHouseList():
         resu = {'code': 10001, 'message': 'Invalid data. Usage: data: {"locationName": ""}'}
         return json.dumps(resu, ensure_ascii=False)        
 
+# data: {'username': '', password: ''}
+@server.route('/register', methods=['post'])
+def register():
+    data = request.data
+    form_data = json.loads(data, encoding='utf-8')
+    uname = form_data['username']
+    pw = form_data['password']
+    r = user_service.register(uname, pw)
+    resu = {}
+    if r == 1:
+        resu = {'code': 200, 'message': 'ok'}
+    else:
+        resu = {'code': 10001, 'message': 'username existed'}
+    return json.dumps(resu, ensure_ascii=False)
+
+# data : {'username': '', 'paasword': ''}
+@server.route('/login', methods=['post'])
+def login():
+    data = request.data
+    form_data = json.loads(data, encoding='utf-8')
+    uname = form_data['username']
+    pw = form_data['password']
+    r = user_service.login(uname, pw)
+    resu = {}
+    if r == 1:
+        resu = {'code':200, 'message': 'ok'}
+    else:
+        resu = {'code': 10001, 'message': 'fail'}
+
+
 # # get houses by bounds
 # # data: {'bounds': []}
 # @server.route('/searchHouses', methods=['post'])
