@@ -16,6 +16,8 @@ import Message from 'ant-design-vue/lib/message';
 import 'ant-design-vue/dist/antd.css';
 import md5 from 'js-md5';
 
+import Global from '@/utils/Global';
+
 Vue.component(Button.name, Button);
 Vue.component(Form.name, Form);
 Vue.component(Form.Item.name, Form.Item);
@@ -28,10 +30,12 @@ Vue.component(InputNumber.name, InputNumber);
 // Vue.component(Message.name, Message);
 
 // Vue.prototype.$message = Message
-Vue.config.productionTip = false
-Vue.prototype.$axios = axios 
+Vue.config.productionTip = false;
+Vue.prototype.$axios = axios;
 Vue.prototype.$md5 = md5;
-Vue.prototype.$message = Message
+Vue.prototype.$message = Message;
+Vue.prototype.$global = Global;
+
 
 router.beforeEach((to,from,next) =>{
   if(to.meta.title){

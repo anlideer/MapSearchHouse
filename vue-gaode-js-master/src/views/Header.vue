@@ -9,15 +9,31 @@
 </template>
 
 <script>
+import {bus} from '@/utils/bus.js';
+
   export default {
     data(){
       return{
-        hasLogin: false,
+        hasLogin: false
       }
     },
     methods: {
-
+      updateCorner(){
+        console.log('update corner');
+        if (this.$global.username != null)
+        {
+          this.$set(this, 'hasLogin', true);
+        }
+        else
+        {
+          this.$set(this, 'hasLogin', false);
+        }
+      }
+    },
+    created(){
+      bus.$on('login', this.updateCorner);
     }
+
   }
 </script>
 

@@ -59,7 +59,7 @@ def login():
         resu = {'code':200, 'message': 'ok'}
     else:
         resu = {'code': 10001, 'message': 'fail'}
-
+    return json.dumps(resu, ensure_ascii=False)
 
 # # get houses by bounds
 # # data: {'bounds': []}

@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import {bus} from '@/utils/bus.js';
 function hasErrors(fieldsError) {
   return Object.keys(fieldsError).some(field => fieldsError[field]);
 }
@@ -83,6 +84,10 @@ export default {
             console.log(res.data);
             if (res.data['code'] == 200){
               this.$message.success('登录成功');
+              this.$global.username = values.userName;
+              this.$global.password = this.$md5(values.password);
+              console.log('emit login');
+              bus.$emit('login');
               this.$router.push({name: 'home'});
             }
             else if (res.data['code'] == 10001){
