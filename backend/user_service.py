@@ -30,3 +30,31 @@ def login(uname, pw):
         return 1 # ok
     else:
         return 0 # fail
+
+def star_house(uname, pw, link):
+    info = collection.find_one({'username': uname, 'password': pw})
+    if info == None:
+        return 0    # havent login
+    favorites = info['stars']
+    if link in favorites:
+        return -1   # already stared
+    else:
+        favorites.append(link)
+        collection.update({'username': uname}, {'$set': {'stars': favorites}})
+        return 1    # ok
+
+def get_stars(uname, pw):
+    info = collection.find_one({'username': uname, 'password': pw})
+    if info == None:
+        return None    # havent login
+    favorites = info['stars']
+    return favorites
+
+def remove_star(uname, pw, link):
+    info = collection.find_one({'username': uname, 'password': pw})
+    if info == None:
+        return 0    # havent login
+    favorites = info['stars']
+    favorites.remove(link)
+    collection.update({'username': uname}, {'$set': {'stars': favorites}})
+    return 1    # ok    

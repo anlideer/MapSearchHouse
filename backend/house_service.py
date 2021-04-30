@@ -25,6 +25,10 @@ def get_house_list(name):
     else:
         return []
 
+def get_house_by_link(link):
+    house = raw_collection.find_one({'link': link})
+    return house
+
 # def get_all_houses():
 #     houses = list(collection.find())
 #     res = []

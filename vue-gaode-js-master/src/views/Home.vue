@@ -253,13 +253,17 @@ export default {
               tmpStr += '<br/><img referrer="no-referrer|origin|unsafe-url" src="' + h['photo'].toString()  +'" height="100"/>'
               tmpStr += '<div>价格：' + h['price'].toString() + '元/月</div>'
               tmpStr += '<div>' + h['rooms'] + ' 面积: ' + h['area'] + '</div>'
+              if (this.$global.username != null)
+              {
+                tmpStr += '<button onclick="starHouse(h[\'link\'])">收藏</button>'
+              }
               tmpStr += '</div><br/>';
               houseHtml += tmpStr;
             }
             if (houseHtml == ''){
               houseHtml = '<div>抱歉，没有符合设定的价格区间的房源</div>'
             }
-            //let that = this;
+            let that = this;
             let InfoContent = Vue.extend({
               template: '<div> <div id="scrolltest" style="overflow:auto; height:300px; width: 300px;"> <div>' 
               + singleData.location  + '-总共' + singleData.houseNum + '房源</div><br/>'
@@ -271,11 +275,10 @@ export default {
                 };
               },
               methods: {
-                // chooseThis(){
-                //   console.log('choose this!');
-                //   // 外面写个函数再把选定的这个东西的信息传给它
-                //   that.chooseCompanyLocation(p);
-                // },
+                starHouse(link){
+                  console.log('star', link);
+                  that.star_house(link);
+                },
               },
             });
             let component = new InfoContent().$mount();
@@ -293,6 +296,11 @@ export default {
             console.log(error);
           });
       }
+    },
+
+    // 收藏房源
+    star_house(link){
+      
     },
 
     // 搜索的回调

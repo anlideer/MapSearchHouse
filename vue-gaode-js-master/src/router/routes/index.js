@@ -22,5 +22,13 @@ export const constantRoutes = [
     meta: {
       title: '地图找房注册'
     }
+  },
+  {
+    path: '/favorites',
+    name: 'favorite',
+    component: () => import('@/views/Favorites'),
+    meta: {
+      title: '地图找房收藏夹'
+    }
   }
 ];
