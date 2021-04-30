@@ -31,6 +31,7 @@ import {bus} from '@/utils/bus.js';
       }
     },
     created(){
+      this.updateCorner();
       bus.$on('login', this.updateCorner);
     }
 

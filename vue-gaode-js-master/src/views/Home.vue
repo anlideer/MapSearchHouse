@@ -255,7 +255,7 @@ export default {
               tmpStr += '<div>' + h['rooms'] + ' 面积: ' + h['area'] + '</div>'
               if (this.$global.username != null)
               {
-                tmpStr += '<button onclick="starHouse(h[\'link\'])">收藏</button>'
+                tmpStr += '<button @click=\'starHouse("' + h['link'].toString() + '")\'>收藏</button>'
               }
               tmpStr += '</div><br/>';
               houseHtml += tmpStr;
@@ -300,7 +300,26 @@ export default {
 
     // 收藏房源
     star_house(link){
-      
+      this.$axios({
+        url: 'http://182.92.223.235:8888/star',
+        method: 'post',
+        data: {
+          'username':this.$global.username,
+          'password': this.$global.password,
+          'link': link
+        }
+      }).then(res => {
+        console.log(res.data);
+        if (res.data['code'] == 200){
+          this.$message.success('收藏成功');
+        }
+        else if (res.data['code'] == 10001){
+          this.$message.error('登录信息失效');
+        }
+        else if (res.data['code'] == 10002){
+          this.$message.warning('已在收藏夹中');
+        }
+      })
     },
 
     // 搜索的回调

@@ -13,6 +13,7 @@ import DropDown from 'ant-design-vue/lib/dropdown';
 import Menu from 'ant-design-vue/lib/menu';
 import InputNumber from 'ant-design-vue/lib/input-number';
 import Message from 'ant-design-vue/lib/message';
+import AList from 'ant-design-vue/lib/list';
 import 'ant-design-vue/dist/antd.css';
 import md5 from 'js-md5';
 
@@ -27,6 +28,9 @@ Vue.component(DropDown.name, DropDown);
 Vue.component(Menu.name, Menu);
 Vue.component(Menu.Item.name, Menu.Item);
 Vue.component(InputNumber.name, InputNumber);
+Vue.component(AList.name, AList);
+Vue.component(AList.Item.name, AList.Item);
+Vue.component(AList.Item.Meta.name, AList.Item.Meta);
 // Vue.component(Message.name, Message);
 
 // Vue.prototype.$message = Message

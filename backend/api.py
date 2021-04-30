@@ -61,6 +61,59 @@ def login():
         resu = {'code': 10001, 'message': 'fail'}
     return json.dumps(resu, ensure_ascii=False)
 
+# data : {'username': '', 'password': '', 'link': ''}
+@server.route('/star', methods=['post'])
+def star():
+    data = request.data
+    form_data = json.loads(data, encoding='utf-8')
+    r = user_service.star_house(form_data['username'], form_data['password'], form_data['link'])
+    resu = {}
+    if r == 1:
+        resu = {'code': 200, 'message': 'ok'}
+    elif r == 0:
+        resu = {'code': 10001, 'message': 'havent login'}
+    elif r == -1:
+        resu = {'code': 10002, 'message': 'already stared'}
+    return json.dumps(resu, ensure_ascii=False)
+
+# data : {'username': '', 'password': '', 'link': ''}
+@server.route('/removeStar', methods=['post'])
+def remove_star():
+    data = request.data
+    form_data = json.loads(data, encoding='utf-8')
+    r = user_service.remove_star(form_data['username'], form_data['password'], form_data['link'])
+    resu = {}
+    if r == 1:
+        resu = {'code': 200, 'message': 'ok'}
+    else:
+        resu = {'code': 10001, 'message': 'havent login'}
+    return json.dumps(resu, ensure_ascii=False)   
+
+# data: {'username': '', 'password': ''}
+@server.route('/getStars', methods=['post'])
+def get_stars():
+    data = request.data
+    form_data = json.loads(data, encoding='utf-8')
+    resu = {}
+    favorites = user_service.get_stars(form_data['username'], form_data['password'])
+    if favorites == None:
+        resu = {'code': 10001, 'message': 'havent login'}
+    else:
+        res = []
+        for house in favorites:
+            whole_info = house_service.get_house_by_link(house)
+            if whole_info != None:
+                final = {}
+                final['title'] = whole_info['title']
+                final['raw_link'] = whole_info['link']
+                final['link'] = 'https://dt.lianjia.com/zufang/' + whole_info['link']
+                final['description'] = whole_info['rooms'] + ' ' + whole_info['price'] + '元/月' + ' ' + whole_info['area']
+                final['photo'] = whole_info['photo']
+                res.append(final)
+        resu = {'code': 200, 'message': 'ok', 'stars': res}
+    return json.dumps(resu, ensure_ascii=False)
+
+
 # # get houses by bounds
 # # data: {'bounds': []}
 # @server.route('/searchHouses', methods=['post'])
