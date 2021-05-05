@@ -109,7 +109,7 @@ export default {
         if (!err) {
           // 在这里接注册接口
           this.$axios({
-            url: 'http://182.92.223.235:8888/register',
+            url: 'http://123.56.90.234:8888/register',
             method: 'post',
             data: {
               'username': values.userName,

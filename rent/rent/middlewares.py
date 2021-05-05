@@ -162,3 +162,4 @@ class ProxyMiddleWare(object):
         #     "https": https_pro
         # }
         proxies = http_pro
+        print(res)

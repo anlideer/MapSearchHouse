@@ -39,6 +39,7 @@ class RentSpider(scrapy.Spider):
 
     def parse(self, response):
         # crawl
+        print(response)
         houses = response.css('.content__list--item')
         for house in houses:
             item = RentItem()

@@ -29,7 +29,7 @@ export default {
     methods: {
         fetchStars(){
             this.$axios({
-                url: 'http://182.92.223.235:8888/getStars',
+                url: 'http://123.56.90.234:8888/getStars',
                 method: 'post',
                 data: {
                     username: this.$global.username,
@@ -48,7 +48,7 @@ export default {
         },
         unstar(link){
             this.$axios({
-                url: 'http://182.92.223.235:8888/removeStar',
+                url: 'http://123.56.90.234:8888/removeStar',
                 method: 'post',
                 data: {
                     username: this.$global.username,

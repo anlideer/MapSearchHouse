@@ -74,7 +74,7 @@ export default {
         if (!err) {
           // 在这里接登录接口
           this.$axios({
-            url: 'http://182.92.223.235:8888/login',
+            url: 'http://123.56.90.234:8888/login',
             method: 'post',
             data: {
               'username': values.userName,

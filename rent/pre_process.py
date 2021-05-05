@@ -2,9 +2,9 @@ import pymongo
 import requests
 from bson.json_util import dumps
 
-MONGO_URI = '182.92.223.235:27017'
+MONGO_URI = '123.56.90.234:27017'
 MONGO_DB = 'rent'
-MONGO_USER = 'admin'
+MONGO_USER = 'anlideer'
 MONGO_PW = 'xtt576566'
 
 client = None
@@ -99,7 +99,7 @@ def get_gps(house):
 def add_lnglat():
     houses = list(new_collection.find())
     for house in houses:
-        if 'longitude' in house:
+        if 'longitude' in house and 'link' in house:
             new_collection.update({'link': house['link']}, {'$set': {'lnglat': [house['longitude'], house['latitude']]}})
 
 def export_json():

@@ -12,9 +12,9 @@ BOT_NAME = 'rent'
 SPIDER_MODULES = ['rent.spiders']
 NEWSPIDER_MODULE = 'rent.spiders'
 
-MONGO_URI = '182.92.223.235:27017'
+MONGO_URI = '123.56.90.234:27017'
 MONGO_DB = 'rent'
-MONGO_USER = 'admin'
+MONGO_USER = 'anlideer'
 MONGO_PW = 'xtt576566'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -36,7 +36,7 @@ CONCURRENT_REQUESTS_PER_IP = 16
 
 # Retry settings
 RETRY_ENABLED = True
-RETRY_TIMES = 5
+RETRY_TIMES = 20
 
 # Disable cookies (enabled by default)
 #COOKIES_ENABLED = False

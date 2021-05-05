@@ -219,7 +219,7 @@ export default {
         // 显示信息窗体
         var singleData = chosenData[0];
         this.$axios({
-            url: 'http://182.92.223.235:8888/getHouseList',
+            url: 'http://123.56.90.234:8888/getHouseList',
             method: 'post',
             data: {
               'locationName': singleData.location,
@@ -301,7 +301,7 @@ export default {
     // 收藏房源
     star_house(link){
       this.$axios({
-        url: 'http://182.92.223.235:8888/star',
+        url: 'http://123.56.90.234:8888/star',
         method: 'post',
         data: {
           'username':this.$global.username,
