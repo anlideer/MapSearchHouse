@@ -24,19 +24,20 @@ MONGO_PW = 'xtt576566'
 ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 16
+CONCURRENT_REQUESTS = 4
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
 DOWNLOAD_DELAY = 1
+RANDOMIZE_DOWNLOAD_DELAY = True  # 随机的等待时间
 # The download delay setting will honor only one of:
-CONCURRENT_REQUESTS_PER_DOMAIN = 16
-CONCURRENT_REQUESTS_PER_IP = 16
+CONCURRENT_REQUESTS_PER_DOMAIN = 4
+CONCURRENT_REQUESTS_PER_IP = 4
 
 # Retry settings
 RETRY_ENABLED = True
-RETRY_TIMES = 20
+RETRY_TIMES = 10
 
 # Disable cookies (enabled by default)
 #COOKIES_ENABLED = False
@@ -63,7 +64,8 @@ SPIDER_MIDDLEWARES = {
 DOWNLOADER_MIDDLEWARES = {
 #    'rent.middlewares.RentDownloaderMiddleware': 543,
     'rent.middlewares.ProxyMiddleWare': 700,
-    'scrapy.downloadermiddlewares.retry.RetryMiddleware': 550,
+    #'scrapy.downloadermiddlewares.retry.RetryMiddleware': 550,
+    'rent.middlewares.MyRetryMiddleware': 550,
 }
 
 # Enable or disable extensions

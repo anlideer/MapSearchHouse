@@ -10,6 +10,7 @@ from itemadapter import is_item, ItemAdapter
 import random
 import time
 import requests
+import scrapy.downloadermiddlewares.retry
 
 proxies = {}
 expire_time = 0
@@ -130,19 +131,19 @@ class ProxyMiddleWare(object):
  
     def process_response(self, request, response, spider):  
         # 如果返回的response状态不是200，重新生成当前request对象  
-        if response.status != 200:
-            self.switch_ip()    # 手动换ip（可能这个ip过快了）
-            proxy = self.get_proxy()  
-            #print("this is response ip:"+proxy)  
-            # 对当前reque加上代理  
-            request.meta['proxy'] = proxy   
-            return request  
+        # if response.status != 200:
+        #     self.switch_ip()    # 手动换ip（可能这个ip过快了）
+        #     proxy = self.get_proxy()  
+        #     #print("this is response ip:"+proxy)  
+        #     # 对当前reque加上代理  
+        #     request.meta['proxy'] = proxy   
+        #     return request  
         return response
     
     def get_proxy(self):  
         global expire_time
         global proxies
-        current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time() + 20))   # leave 20s for scrapy
+        current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time() + 60))   # leave 20s for scrapy
         if current_time > str(expire_time):
             self.switch_ip()
         return proxies
@@ -162,4 +163,23 @@ class ProxyMiddleWare(object):
         #     "https": https_pro
         # }
         proxies = http_pro
-        print(res)
+        # test validity
+        test_res = requests.get('https://www.baidu.com/', proxies=proxies)
+        if test_res.status_code != 200:
+            switch_ip()
+
+class MyRetryMiddleware(scrapy.downloadermiddlewares.retry.RetryMiddleware):
+    def process_exception(self, request, exception, spider):
+        global proxies
+        global expire_time
+        global get_ip_api
+        res = requests.get(get_ip_api)
+        proxyHost = res.json()['data'][0]['ip']
+        proxyPort = res.json()['data'][0]['port']
+        expire_time = res.json()['data'][0]['expire_time']
+        http_pro = "http://" + str(proxyHost) + ":" + str(proxyPort)
+        proxies = http_pro
+        request.meta['proxy'] = proxies
+            
+        if isinstance(exception, self.EXCEPTIONS_TO_RETRY) and not request.meta.get('dont_retry', False):
+            return self._retry(request, exception, spider)

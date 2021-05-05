@@ -18,11 +18,14 @@
       </a-menu>
       <a-button style="margin-left: 8px"> 通勤方式<a-icon type="down" /> </a-button>
     </a-dropdown>
+
     <!-- <a-button @click="select">搜索</a-button> -->
     价格区间：
     <a-input-number id="inputNumber" v-model="priceMin" :min="1" @change="onPriceMinChange" />
     -
     <a-input-number id="inputNumber2" v-model="priceMax" :min="1" @change="onPriceMaxChange" />
+        通勤时间：
+        <a-input-number id='inputTime' v-model='travelTime' :min="1" />
     </div>
     <div id="container"></div>
   </div>
