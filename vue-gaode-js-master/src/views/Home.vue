@@ -12,9 +12,9 @@
       </div>
       <a-dropdown>
       <a-menu slot="overlay" @click="handleMenuClick">
-        <a-menu-item key="1"> 地铁+公交</a-menu-item>
-        <a-menu-item key="2"> 地铁</a-menu-item>
-        <a-menu-item key="3"> 公交</a-menu-item>
+        <a-menu-item key="SUBWAY,BUS"> 地铁+公交</a-menu-item>
+        <a-menu-item key="SUBWAY"> 地铁</a-menu-item>
+        <a-menu-item key="BUS"> 公交</a-menu-item>
       </a-menu>
       <a-button style="margin-left: 8px"> 通勤方式<a-icon type="down" /> </a-button>
     </a-dropdown>
@@ -49,7 +49,7 @@ export default {
       polygons: [],
       companyPosition: [],
       travelTime: 30,
-      travelMethod: 0,  // 0-地铁+公交，1-地铁，2-公交
+      travelMethod: 'SUBWAY,BUS',
       allHouses: [],
       cluster: null,
       priceMin: null,
@@ -112,15 +112,8 @@ export default {
   methods: {
     handleMenuClick(e) {
       console.log('choose method', e);
-      if (e=='1'){
-        this.travelMethod = 0;
-      }
-      else if (e=='2'){
-        this.travelMethod = 1;
-      }
-      else {
-        this.travelMethod = 2;
-      }
+      this.travelMethod = e['key'];
+      console.log(this.travelMethod);
     },
     onPriceMinChange(){
       console.log(this.priceMin);
@@ -240,15 +233,18 @@ export default {
             var pMax = parseInt(this.priceMax);
             for (var i = 0; i < houseList.length; i++){
               var h = houseList[i];
-              if (!isNaN(pMin)){
-                if (pMin > h['price'])
-                {
-                  continue;
+              if (this.priceMin != null & this.priceMax != null)
+              {
+                if (!isNaN(pMin)){
+                  if (pMin > h['price'])
+                  {
+                    continue;
+                  }
                 }
-              }
-              if (!isNaN(pMax)){
-                if (pMax < h['price']){
-                  continue;
+                if (!isNaN(pMax)){
+                  if (pMax < h['price']){
+                    continue;
+                  }
                 }
               }
               var tmpStr = '<div><meta name="referrer" content="no-referrer" />';
@@ -381,7 +377,7 @@ export default {
             //console.log('choose this!');
             // 外面写个函数再把选定的这个东西的信息传给它
             that.chooseCompanyLocation(p);
-          },
+          }
         },
       });
       let component = new InfoContent().$mount();
@@ -417,7 +413,7 @@ export default {
     chooseCompanyLocation(p)
     {
       console.log(p);
-      this.companyPosition = [p.location.lng, p.location.lat];
+      this.companyPosition = [p.location['lng'], p.location['lat']];
       if (this.infoWindow != null){
         this.infoWindow.close();
         this.infoWindow = null;
@@ -431,15 +427,12 @@ export default {
         icon: '/star.png',  // 问过高德技术客服了，说marker自定义icon显示不正常的问题可能是vue导致的且无原生vue解决方案，所以我重做了图标，显示效果是正常的。
         offset: new this.AMap.Pixel(-10, -10),
         anchor: 'center',
-      })
+      });
 
       // 公交到达圈，绘制多边形，然后筛选一下在范围内的房源
-      this.arrivalRange.search(this.companyPosition, this.travelTime, this.drawPolygons,
-        {
-          policy: this.travelMethod
-        }
-      )
+      this.arrivalRange.search(this.companyPosition, this.travelTime, this.drawPolygons, {policy: this.travelMethod});
 
+      
     },
 
 
