@@ -1,8 +1,8 @@
 import pymongo
 
-MONGO_URI = '182.92.223.235:27017'
+MONGO_URI = '123.56.90.234:27017'
 MONGO_DB = 'rent'
-MONGO_USER = 'admin'
+MONGO_USER = 'anlideer'
 MONGO_PW = 'xtt576566'
 MONGO_COLLECTION = 'User'
 collection = None
